@@ -1,6 +1,6 @@
 import type { Product } from './product'
 interface Order {
-  id: number
+  id: string
   total: number
   isArchived: boolean
   products: Product[]

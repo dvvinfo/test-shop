@@ -1,6 +1,7 @@
 // store/index.ts
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid';
 import type { Product } from '@/types/product'
 import type { Order } from '@/types/order'
 import type { User } from '@/types/user'
@@ -104,11 +105,51 @@ export const useStore = defineStore({
       )
       return this.total
     },
-    getToOrder() {
-      const order = { id: Date.now(), products: this.cart, total: this.total, isArchived: true }
-      this.orders.push(order)
-      localStorage.setItem('orders', JSON.stringify(this.orders))
-      // this.router.push('/orders')
+    getToOrder(){
+      // Проверяем, есть ли уже заказ с такими же продуктами
+      const existingOrderIndex: number = this.orders.findIndex((order: Order) =>
+        order.products.every((product: Product) =>
+          this.cart.some((cartProduct: Product) => cartProduct.id === product.id)
+        )
+      );
+
+      if (existingOrderIndex === -1) {
+        // Если заказа с такими же продуктами нет, добавляем новый заказ
+        const order: Order = { id: uuidv4(), products: [], total: 0, isArchived: true };
+        this.cart.forEach((cartProduct: Product) => {
+          if (cartProduct.quantity !== undefined) { // Проверка на существование quantity
+            order.products.push({ ...cartProduct });
+            order.total += cartProduct.price * cartProduct.quantity;
+          }
+        });
+        this.orders.push(order);
+      } else {
+        // Если заказ с такими же продуктами уже существует, обновляем его
+        const existingOrder: Order = this.orders[existingOrderIndex];
+        this.cart.forEach((cartProduct: Product) => {
+          if (cartProduct.quantity !== undefined) { // Проверка на существование quantity
+            const existingProduct: Product | undefined = existingOrder.products.find(
+              (product: Product) => product.id === cartProduct.id
+            );
+            if (existingProduct) {
+              // existingProduct.quantity += cartProduct.quantity;
+              existingProduct.quantity = Math.max(existingProduct.quantity || 0, cartProduct.quantity); // Only keep the maximum quantity
+            } else {
+              existingOrder.products.push({ ...cartProduct });
+            }
+          }
+        });
+        existingOrder.total += this.total;
+      }
+
+      // Очищаем корзину после оформления заказа
+      
+
+      // Сохраняем изменения в localStorage
+      localStorage.setItem('orders', JSON.stringify(this.orders));
+
+      // Опционально: переход на страницу заказов
+      // this.router.push('/orders');
     },
     checkout() {
       // Проверяем, есть ли товары в корзине

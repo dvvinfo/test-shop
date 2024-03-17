@@ -9,6 +9,6 @@ interface Product {
     image: string
   }
   images: [string]
-  quantity?: number | undefined
+  quantity?: number 
 }
 export { type Product }
