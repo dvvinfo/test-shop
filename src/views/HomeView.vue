@@ -83,7 +83,7 @@ const submitFormBalance = async () => {
                 </p>
               </div>
               <form @submit.prevent="submitFormBalance" class="form">
-                <el-input v-model.number.trim="balance" placeholder="enter the balance" />
+                <el-input v-model.number="balance" placeholder="enter the balance" />
               </form>
               <template #footer>{{ store.getUser.role }}</template>
             </el-card>

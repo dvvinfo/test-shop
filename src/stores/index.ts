@@ -46,16 +46,10 @@ export const useStore = defineStore({
       }
     },
     async fetchBalance(balance: number) {
-      const userId = this.user?.id
-      try {
-        const response = await axios.get<User>(`https://api.escuelajs.co/api/v1/users/${userId}`)
-        const userData = response.data
-        // Добавляем поле баланса с каким-то значением по умолчанию
-        userData.balance = balance
+      if (this.user) {
+        this.user.balance = balance
         localStorage.setItem('user', JSON.stringify(this.user))
-        console.log('Пользователь загружен:', this.user)
-      } catch (error) {
-        console.error('Ошибка при получении пользователя:', error)
+        console.log('Баланс пользователя обновлен:', this.user.balance)
       }
     },
     async fetchProducts() {
