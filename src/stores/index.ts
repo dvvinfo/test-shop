@@ -114,7 +114,7 @@ export const useStore = defineStore({
       const order = { id: Date.now(), products: this.cart, total: this.total, isArchived: true }
       this.orders.push(order)
       localStorage.setItem('orders', JSON.stringify(this.orders))
-      this.router.push('/orders')
+      // this.router.push('/orders')
     },
     checkout() {
       // Проверяем, есть ли товары в корзине

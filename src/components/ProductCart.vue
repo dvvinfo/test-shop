@@ -11,13 +11,13 @@ const props = defineProps<ProductCart>()
 const { product } = toRefs(props)
 
 const handleClickPlus = () => {
-  if (product.value) {
+  if (product.value.quantity ) {
     product.value.quantity++
     store.getTotal()
   }
 }
 const handleClickMinus = () => {
-  if (product.value && product.value.quantity > 0) {
+  if (product.value.quantity && product.value.quantity > 1) {
     product.value.quantity--
     store.getTotal()
   }
