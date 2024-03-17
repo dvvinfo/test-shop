@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import ProductCart from '@/components/ProductCart.vue';
 import { useStore } from '@/stores/index'
-import { computed, onMounted, ref } from 'vue';
+import { computed } from 'vue';
 const store = useStore()
-const total = ref(0);
 
-// onMounted (async() => {
-//     await store.fetchProducts()
-//     total.value = store.getTotalPrice();
-// })
 const totalPrice = computed(() => store.getTotalPrice);
 
 </script>

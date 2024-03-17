@@ -1,35 +1,30 @@
 <script setup lang="ts">
-import { toRefs} from 'vue'
+import { toRefs } from 'vue'
 import type { Product } from '@/types/product'
 import { useStore } from '@/stores/index'
 const store = useStore()
 
 interface ProductCart {
-  product:Product
+  product: Product
 }
 const props = defineProps<ProductCart>()
 const { product } = toRefs(props)
-// const emit = defineEmits<{
-//   (e: 'countPlus', product: number): void
-//   (e: 'countMinus', product: number): void
-// }>()
 
 const handleClickPlus = () => {
-
-   product.value.quantity++
-   store.getTotal()
+  if (product.value) {
+    product.value.quantity++
+    store.getTotal()
+  }
 }
 const handleClickMinus = () => {
-  if (product.value.quantity > 0) {
+  if (product.value && product.value.quantity > 0) {
     product.value.quantity--
     store.getTotal()
-
   }
 }
 const handleClickelete = (product: Product) => {
   store.removeFromCart(product)
 }
-
 </script>
 
 <template>
@@ -48,23 +43,25 @@ const handleClickelete = (product: Product) => {
     <template #footer>
       <div class="card-footer">
         <div class="card-footer-content">
-        <el-button class="card-button" type="primary" @click="handleClickPlus"> +</el-button>
-        <span class="card-quantity">{{ product.quantity }}</span>
-        <el-button class="card-button" type="primary" @click="handleClickMinus"> -</el-button>
-      </div>
-        <el-button class="card-button" type="primary" @click="handleClickelete(product)"> Delete</el-button>
+          <el-button class="card-button" type="primary" @click="handleClickPlus"> +</el-button>
+          <span class="card-quantity">{{ product.quantity }}</span>
+          <el-button class="card-button" type="primary" @click="handleClickMinus"> -</el-button>
+        </div>
+        <el-button class="card-button" type="primary" @click="handleClickelete(product)">
+          Delete</el-button
+        >
       </div>
     </template>
   </el-card>
 </template>
 
 <style scoped lang="scss">
-.card-footer{
+.card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.card-footer-content{
+.card-footer-content {
   display: flex;
   align-items: center;
   gap: 15px;

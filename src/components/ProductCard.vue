@@ -5,18 +5,7 @@ import type { Product } from '@/types/product'
 interface Props {
   product: Product
 }
-// interface Product {
-//   id: number
-//   title: string
-//   price: number
-//   description: string
-//   category: {
-//     id: number
-//     name: string
-//     image: string
-//   }
-//   images: [string]
-// }
+
 
 const props = defineProps<Props>()
 const { product } = toRefs(props)
